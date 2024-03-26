@@ -1,0 +1,13 @@
+.card-container {
+  box-sizing: border-box;
+  width: 300px;
+  height: 400px;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.card-container__img {
+  width: 278px;
+  height: 300px;
+  object-fit: cover;
+}
