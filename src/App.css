@@ -28,6 +28,14 @@
   color: #61dafb;
 }
 
+.counter-container {
+  font-size: 50px;
+}
+
+.counter-container__btn {
+  font-size: 50px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
