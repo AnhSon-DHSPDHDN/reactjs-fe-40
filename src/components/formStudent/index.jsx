@@ -29,7 +29,6 @@ const FormStudent = ({
 
   useEffect(() => {
     if (studentEdit) {
-      console.log(studentEdit, "studentEdit");
       form.setFieldsValue({
         name: studentEdit.name,
         score: studentEdit.score

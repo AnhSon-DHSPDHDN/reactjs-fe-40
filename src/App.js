@@ -1,17 +1,31 @@
 import "./App.scss";
-import { useState } from "react";
-import { Button } from "antd";
+import { useEffect, useState } from "react";
+import { Button, message } from "antd";
 import ListStudent from "./components/listStudent";
 import FormStudent from "./components/formStudent";
 import * as uuid from "uuid";
-
-const keyStudentsList = "students";
+import { StudentApi } from "./apis/students";
 
 function App() {
-  const [studentsList, setStudentsList] = useState(
-    JSON.parse(localStorage.getItem(keyStudentsList)) || []
-  );
+  const [studentsList, setStudentsList] = useState([]);
   const [studentEdit, setStudentEdit] = useState(null);
+
+  // Lấy dữ liệu student từ api
+  const handleFetchAllStudent = async () => {
+    try {
+      const data = await StudentApi.getAllStudents();
+      setStudentsList(data);
+    } catch (error) {
+      // message import từ antd
+      message.error("Đã có lỗi xảy ra");
+    }
+  };
+
+  // Dùng useEffect để gọi hàm fetchAllStudent từ didmount
+  useEffect(() => {
+    handleFetchAllStudent();
+  }, []);
+
   // Lưu thông tin student đang chỉnh sửa
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClickAddStudent = () => {
@@ -30,38 +44,45 @@ function App() {
     setStudentEdit(null);
   };
 
-  const handleAddStudent = (student) => {
+  const handleAddStudent = async (student) => {
     const newStudent = {
       ...student,
       id: uuid.v4(),
     };
-    setStudentsList([newStudent, ...studentsList]);
-    setIsModalOpen(false);
-    localStorage.setItem(
-      keyStudentsList,
-      JSON.stringify([newStudent, ...studentsList])
-    );
+
+    try {
+      await StudentApi.addStudent(newStudent);
+    } catch (error) {
+      message.error("Đã có lỗi xảy ra khi thêm mới student");
+    } finally {
+      handleFetchAllStudent();
+      setIsModalOpen(false);
+      // Get lai data sau khi add
+    }
   };
 
-  const handleEditStudent = (newStudent) => {
-    const _newStudentsList = studentsList.map((_student) => {
-      if (_student.id === newStudent.id) {
-        return { ...newStudent };
-      }
-      return { ..._student };
-    });
-    setStudentsList(_newStudentsList);
-    setIsModalOpen(false);
-    setStudentEdit(null); // student edit = null để về trạng thái add Student
-    localStorage.setItem(keyStudentsList, JSON.stringify(_newStudentsList));
+  const handleEditStudent = async (newStudent) => {
+    console.log(newStudent, "newStudent");
+    try {
+      await StudentApi.updateStudentById(newStudent.id, newStudent);
+    } catch (error) {
+      console.log("Da co loi xay ra khi edit student");
+    } finally {
+      setIsModalOpen(false);
+      setStudentEdit(null); // student edit = null để về trạng thái add Student
+      handleFetchAllStudent();
+    }
   };
 
-  const handleDeleteStudent = (id) => {
-    const newStudentList = studentsList.filter((_student) => {
-      return _student.id !== id;
-    });
-    setStudentsList(newStudentList);
-    localStorage.setItem(keyStudentsList, JSON.stringify(newStudentList));
+  const handleDeleteStudent = async (id) => {
+    try {
+      await StudentApi.deleteStudentById(id);
+    } catch (error) {
+      message.error("Da co loi khi delete student");
+    } finally {
+      handleFetchAllStudent();
+      // Goi lai api get all Student
+    }
   };
 
   return (
