@@ -1,0 +1,7 @@
+.nav-header {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  height: 40px;
+  border-bottom: 1px solid black;
+}
