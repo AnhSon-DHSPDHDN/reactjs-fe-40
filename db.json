@@ -1,0 +1,14 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "productName": "Ao So mi nam",
+      "imgUrl": "https://routine.vn/media/catalog/product/a/o/ao-so-mi-nam-1010-10f21shl003cr2_bright_white_1__1_1.jpg"
+    },
+    {
+      "id": 2,
+      "productName": "Ao Nam",
+      "imgUrl": "https://routine.vn/media/catalog/product/a/o/ao-so-mi-nam-1010-10f21shl003cr2_bright_white_1__1_1.jpg"
+    }
+  ]
+}
